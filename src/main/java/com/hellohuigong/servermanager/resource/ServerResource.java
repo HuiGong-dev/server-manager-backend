@@ -63,7 +63,7 @@ public class ServerResource {
         );
     }
 
-    @GetMapping("/ping/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Response> getServer(@PathVariable("id") Long id) {
         return ResponseEntity.ok(Response.builder()
                 .timeStamp(now())
