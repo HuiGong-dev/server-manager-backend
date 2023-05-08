@@ -43,7 +43,7 @@ public class ServerResource {
         return ResponseEntity.ok(Response.builder()
                 .timeStamp(now())
                 .data(Map.of("server", server))
-                .message(server.getStatus() == Status.SERVER_UP ? "Ping success" : "Ping failed")
+                .message(server.getStatus() == Status.SERVER_UP ? "Server is up" : "Server is down")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build()

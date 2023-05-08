@@ -7,16 +7,15 @@ import com.hellohuigong.servermanager.service.ServerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Service
@@ -33,10 +32,15 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public Server ping(String ipAddress) throws IOException {
-        log.info("Pinging server IP: {}", ipAddress);
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
+        log.info("Toggle server IP: {}", ipAddress);
         Server server = serverRepo.findByIpAddress(ipAddress);
-        InetAddress address = InetAddress.getByName(ipAddress);
-        server.setStatus(address.isReachable(1000) ? Status.SERVER_UP : Status.SERVER_DOWN);
+        Status status = server.getStatus();
+        server.setStatus(status == Status.SERVER_DOWN ? Status.SERVER_UP : Status.SERVER_DOWN);
         serverRepo.save(server);
         return server;
     }
